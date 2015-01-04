@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<fields>
+<field>
+<name>TZLN</name>
+<title>投资理念</title>
+<value>@</value>
+</field> 
+<field>
+<name>TZJL</name>
+<title>投资经历</title>
+<value>#</value>
+</field> 
+<field>
+<name>SHZY</name>
+<title>社会资源</title>
+<value>*</value>
+</field> 
+</fields>
