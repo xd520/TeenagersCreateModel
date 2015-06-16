@@ -20,7 +20,7 @@
 #import "SDImageCache.h"
 #import "SGFocusImageFrame.h"
 #import "SGFocusImageItem.h"
-//#import"SecondViewController.h"
+#import"DetailViewController.h"
 #import "Customer.h"
 #import "BankCardViewController.h"
 #import "MyInvViewController.h"
@@ -32,9 +32,12 @@
     NSString *start;
     NSString *limit;
     UIScrollView *scrollView;
+    UIScrollView *backScrollView;
     NSMutableArray *slideImages;
     UIPageControl *pageControl;
     NSMutableArray *array;
+    NSMutableArray *dataList;
+    UIView *backView;
 }
 
 @end
@@ -59,7 +62,11 @@
     self.view = baseView;
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    //[self performSelector:@selector(callFirstMethods:)];
 
+}
 
 - (void)viewDidLoad
 {
@@ -94,17 +101,20 @@
         self.edgesForExtendedLayout=UIRectEdgeNone;
     }
     
+    backScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth,  ScreenHeight - 49)];
+    [backScrollView setContentSize:CGSizeMake(ScreenWidth, 550)];
+    
+    
+    
     NSLog( @"%d",(int)ScreenHeight - 50);
     
-    UIView *hotView = [[UIView alloc] initWithFrame:CGRectMake(0, 200 + 5, 320, (ScreenHeight - 50 - 200)- 100 - 64)];
-    hotView.backgroundColor = [UIColor redColor];
-    [self.view addSubview:hotView];
+   
     
     NSArray *arr = @[[UIImage imageNamed:@"account"],[UIImage imageNamed:@"bankcard"],[UIImage imageNamed:@"invest"],[UIImage imageNamed:@"program"]];
     NSArray *titleArr = @[@"开户",@"银行卡",@"我的投资",@"我的项目"];
     for (int i = 0; i < arr.count; i++) {
         
-        UIView *icon = [[UIView alloc] initWithFrame:CGRectMake(16*(1 + i) + i*60, 215 + hotView.frame.size.height, 60, 60)];
+        UIView *icon = [[UIView alloc] initWithFrame:CGRectMake(16*(1 + i) + i*60, 279 + 15, 60, 60)];
         UIImageView *litter = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 40, 40)];
         litter.image = [arr objectAtIndex:i];
         [icon addSubview:litter];
@@ -121,21 +131,19 @@
         singleTap.numberOfTapsRequired = 1;
         [icon addGestureRecognizer:singleTap];
         
-        [self.view addSubview:icon];
+        [backScrollView addSubview:icon];
         
-        UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(16*(1 + i) + i*60, 215 + hotView.frame.size.height + 60 + 5, 60, 14)];
+        UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(16*(1 + i) + i*60, 274 + 90, 60, 14)];
         lab.font = [UIFont boldSystemFontOfSize:14];
         lab.text = [titleArr objectAtIndex:i];
+        lab.backgroundColor = [UIColor clearColor];
         lab.textColor = [ColorUtil colorWithHexString:@"252525"];
         lab.textAlignment = NSTextAlignmentCenter;
-        [self.view addSubview:lab];
+        [backScrollView addSubview:lab];
         
     }
-    
-    
-    
-    
-    
+ 
+    [self.view addSubview:backScrollView];
     //添加指示器及遮罩
     
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -151,6 +159,136 @@
     });
 
     
+}
+
+-(void)reloadView {
+
+    
+    
+    backView = [[UIView alloc] initWithFrame:CGRectMake(0, 200 + 10, ScreenWidth, 75)];
+    [backView setBackgroundColor:[UIColor whiteColor]];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5 , 80, 60)];
+    imageView.tag =  100;
+    //                [imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ICONSURL,[[[dataList objectAtIndex:indexPath.row] objectForKey:@"detail_url"] objectForKey:@"LOGO"]]]
+    //                               placeholderImage:[UIImage imageNamed:@"xd1"]];
+    [imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVERURL,[[[dataList objectAtIndex:0] objectForKey:@"detail_url"] objectForKey:@"LOGO"]]]
+              placeholderImage:[UIImage imageNamed:@"xd1"]
+                       success:^(UIImage *image) {
+                           
+                       }
+                       failure:^(NSError *error) {
+                           
+                           UIImageView *imageView1 = (UIImageView *)[(UIImageView *)self.view viewWithTag:100];
+                           [imageView1 setImage:[UIImage imageNamed:@"xd1"]];
+                           
+                       }];
+    
+    [backView addSubview:imageView];
+    
+    //品牌
+    UILabel *brandLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 6, 220, 15)];
+    brandLabel.font = [UIFont boldSystemFontOfSize:15];
+    [brandLabel setTextColor:[ColorUtil colorWithHexString:@"1b1b1b"]];
+    [brandLabel setBackgroundColor:[UIColor clearColor]];
+    brandLabel.text = [[[dataList objectAtIndex:0] objectForKey:@"detail_url"] objectForKey:@"XMMC"];
+    [backView addSubview:brandLabel];
+    
+    //行业
+    UILabel *issuePriceLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 30, 100, 20)];
+    issuePriceLabel.backgroundColor = [ColorUtil colorWithHexString:@"39b3d8"];
+    issuePriceLabel.font = [UIFont boldSystemFontOfSize:14];
+    [issuePriceLabel setTextColor:[UIColor whiteColor]];
+    issuePriceLabel.textAlignment = NSTextAlignmentCenter;
+    //[issuePriceLabel setBackgroundColor:[UIColor clearColor]];
+    issuePriceLabel.text = [[dataList objectAtIndex:0] objectForKey:@"sshy"];
+    [backView addSubview:issuePriceLabel];
+    //地区
+    
+    UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(230, 30, 80, 20)];
+    dateLabel.backgroundColor = [ColorUtil colorWithHexString:@"2ade73"];
+    dateLabel.font = [UIFont boldSystemFontOfSize:14];
+    [dateLabel setTextColor:[UIColor whiteColor]];
+    dateLabel.textAlignment = NSTextAlignmentCenter;
+    //[dateLabel setBackgroundColor:[UIColor clearColor]];
+    dateLabel.text = [[dataList objectAtIndex:0] objectForKey:@"szcs"];
+    [backView addSubview:dateLabel];
+    
+    //项目亮点
+    
+    UILabel *codeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 54, 220, 15)];
+    codeLabel.font = [UIFont systemFontOfSize:10];
+    //[codeLabel setTextColor:[ColorUtil colorWithHexString:@"1b1b1b"]];
+    //[codeLabel setBackgroundColor:[UIColor lightGrayColor]];
+    codeLabel.text = [[[dataList objectAtIndex:0] objectForKey:@"detail_url"] objectForKey:@"LD"];
+    codeLabel.textAlignment = NSTextAlignmentLeft;
+    [backView addSubview:codeLabel];
+
+   // UIView *hotView = [[UIView alloc] initWithFrame:CGRectMake(0, 200 + 5, ScreenWidth, 100)];
+    //hotView.backgroundColor = [UIColor redColor];
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(callPhone:)];
+    //单点触摸
+    singleTap.numberOfTouchesRequired = 1;
+    //点击几次，如果是1就是单击
+    singleTap.numberOfTapsRequired = 1;
+    [backView addGestureRecognizer:singleTap];
+    
+    [backScrollView addSubview:backView];
+    
+}
+
+- (void)callPhone:(UITouch *)sender
+{
+    if (dataList.count) {
+        
+    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    delegate.tagCountStr = @"5";
+    if (delegate.array.count > 0) {
+        Customer *custer = [delegate.array objectAtIndex:0];
+        if (custer.loginSueccss) {
+            DetailViewController *goodsDetailViewController = [[DetailViewController alloc] init];
+            ;
+            // goodsDetailViewController.title = [[[dataList objectAtIndex:indexPath.row] objectForKey:@"DETAIL"] objectForKey:@"XMMC"];
+            goodsDetailViewController.titleName = [[[dataList objectAtIndex:0] objectForKey:@"detail_url"] objectForKey:@"XMMC"] ;
+            if ([[dataList objectAtIndex:0] objectForKey:@"cpdm"] == [NSNull null]) {
+                delegate.numStr = @"";
+            } else {
+                delegate.numStr = [[dataList objectAtIndex:0] objectForKey:@"cpdm"];
+            }
+            goodsDetailViewController.hidesBottomBarWhenPushed = YES;
+           ;
+            [self.navigationController pushViewController:goodsDetailViewController animated:NO];
+        }else {
+            // [self.view makeToast:@"请重新登陆"];
+            LoginViewController *vc = [[LoginViewController alloc] init];
+            vc.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:vc animated:NO];
+            if ([[dataList objectAtIndex:0] objectForKey:@"cpdm"] == [NSNull null]) {
+                delegate.numStr = @"";
+            } else {
+                delegate.numStr = [[dataList objectAtIndex:0] objectForKey:@"cpdm"];
+            }
+
+            
+        }
+    } else {
+        
+        LoginViewController *vc = [[LoginViewController alloc] init];
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:NO];
+       
+        if ([[dataList objectAtIndex:0] objectForKey:@"cpdm"] == [NSNull null]) {
+            delegate.numStr = @"";
+        } else {
+            delegate.numStr = [[dataList objectAtIndex:0] objectForKey:@"cpdm"];
+        }
+  
+     }
+    }else {
+        
+     [self requestUpdateList];
+    
+    }
 }
 
 
@@ -173,19 +311,20 @@
     Customer *customer = [delegate.array objectAtIndex:0];
         if (customer.loginSueccss) {
               if (view.tag == 1){
-                
+                 
                 BankCardViewController *cv = [[BankCardViewController alloc] init];
                 cv.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:cv animated:NO];
             
             } else if (view.tag == 2){
-            
+             //delegate.tagCountStr = @"2";
                 MyInvViewController *cv = [[MyInvViewController alloc] init];
                 cv.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:cv animated:NO];
                 
             }else if (view.tag == 3){
-            
+                
+             //delegate.tagCountStr = @"3";
                 MyPrjViewController *cv = [[MyPrjViewController alloc] init];
                 cv.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:cv animated:NO];
@@ -193,10 +332,18 @@
             }
         } else {
             
-            [self.view makeToast:@"请先登陆" duration:1.0 position:@"center"];
+           // [self.view makeToast:@"请先登陆" duration:1.0 position:@"center"];
+            delegate.tagCountStr = [NSString stringWithFormat:@"%ld",view.tag];
+            
+            LoginViewController *cv = [[LoginViewController alloc] init];
+            cv.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:cv animated:NO];
+            
         }
         
     } else {
+        
+         delegate.tagCountStr = [NSString stringWithFormat:@"%ld",view.tag];
         
         LoginViewController *cv = [[LoginViewController alloc] init];
         cv.hidesBottomBarWhenPushed = YES;
@@ -287,7 +434,7 @@
     scrollView.showsVerticalScrollIndicator = FALSE;
     scrollView.showsHorizontalScrollIndicator = FALSE;
     [scrollView flashScrollIndicators];
-    [self.view addSubview:scrollView];
+    [backScrollView addSubview:scrollView];
     
     
     // 初始化 pagecontrol
@@ -297,7 +444,7 @@
     pageControl.numberOfPages = [slideImages count];
     pageControl.currentPage = 0;
     [pageControl addTarget:self action:@selector(turnPage) forControlEvents:UIControlEventValueChanged]; // 触摸mypagecontrol触发change这个方法事件
-    [self.view addSubview:pageControl];
+    [backScrollView addSubview:pageControl];
     array = [[NSMutableArray alloc] init];
     for (int i = 0; i < slideImages.count; i++) {
        UIImageView *imageView1 = [[UIImageView alloc] initWithFrame:CGRectMake((ScreenWidth * i) + ScreenWidth, 0, ScreenWidth, 200)];
@@ -385,6 +532,31 @@
    
     
 }
+
+- (void)recivedCategoryList:(NSMutableArray *)dataArray
+{
+    NSLog(@"%s %d %@", __FUNCTION__, __LINE__, @"处理品牌列表数据");
+    if ([dataList count] > 0) {
+        for (NSDictionary *object in dataArray) {
+            [dataList addObject:object];
+        }
+    } else {
+        dataList = dataArray;
+    }
+       [MBProgressHUD hideHUDForView:self.view animated:YES];
+      // [_slimeView endRefresh];
+    if (backView) {
+        [backView removeFromSuperview];
+    }
+    
+    if (dataArray.count > 0) {
+       [self reloadView];
+        
+    }
+   
+}
+
+
 #pragma mark - NetworkModuleDelegate Methods
 -(void)beginPost:(kBusinessTag)tag{
     
@@ -403,6 +575,16 @@
         } else {
             [self recivedUpdateLinkMan:dataArray];
         }
+    } else if (tag== kBusinessTagGetWYTZ){
+        if ([[jsonDic objectForKey:@"success"] boolValue] == NO) {
+            //数据异常处理
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [self.view makeToast:@"下载图片失败"];
+            //            subing = NO;
+        } else {
+            [self recivedCategoryList:dataArray];
+        }
+    
     }
     
     [[NetworkModule sharedNetworkModule] cancel:tag];
@@ -413,6 +595,29 @@
     [alert show];
     if (tag==kBusinessTagGetBanner) {
      [MBProgressHUD hideHUDForView:self.view animated:YES];
+    } else if (tag== kBusinessTagGetWYTZ){
+       
+            
+            backView = [[UIView alloc] initWithFrame:CGRectMake(0, 200 + 10, ScreenWidth, 75)];
+            
+            UILabel *brandLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 6, 220, 15)];
+            brandLabel.font = [UIFont boldSystemFontOfSize:15];
+            [brandLabel setTextColor:[ColorUtil colorWithHexString:@"1b1b1b"]];
+            [brandLabel setBackgroundColor:[UIColor clearColor]];
+            brandLabel.text = @"无热门项目,请点击加载";
+        backView.backgroundColor = [UIColor whiteColor];
+            [backView addSubview:brandLabel];
+        
+        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(callPhone:)];
+        //单点触摸
+        singleTap.numberOfTouchesRequired = 1;
+        //点击几次，如果是1就是单击
+        singleTap.numberOfTapsRequired = 1;
+        [backView addGestureRecognizer:singleTap];
+        
+            [backScrollView addSubview:backView];
+         [MBProgressHUD hideHUDForView:self.view animated:YES];
+
     }
     [[NetworkModule sharedNetworkModule] cancel:tag];
     
@@ -445,7 +650,7 @@
           scrollView.userInteractionEnabled = YES;
           scrollView.showsVerticalScrollIndicator = FALSE;
           scrollView.showsHorizontalScrollIndicator = FALSE;
-          [self.view addSubview:scrollView];
+          [backScrollView addSubview:scrollView];
           
           // 初始化 pagecontrol
           pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(0,180,ScreenWidth,10)]; // 初始化mypagecontrol
@@ -454,7 +659,7 @@
           pageControl.numberOfPages = slideImages.count;
           pageControl.currentPage = 0;
           [pageControl addTarget:self action:@selector(turnPage) forControlEvents:UIControlEventValueChanged]; // 触摸mypagecontrol触发change这个方法事件
-          [self.view addSubview:pageControl];
+          [backScrollView addSubview:pageControl];
           
          
           for (int i = 0; i < slideImages.count; i++) {
@@ -603,9 +808,12 @@
     [pageControl removeFromSuperview];
     scrollView = nil;
     pageControl = nil;
+    [array removeAllObjects];
+    array = nil;
     [slideImages removeAllObjects];
     slideImages = nil;
-    
+    [backScrollView removeFromSuperview];
+    backScrollView = nil;
     start = nil;
     limit = nil;
     [[NSURLCache sharedURLCache] removeAllCachedResponses];

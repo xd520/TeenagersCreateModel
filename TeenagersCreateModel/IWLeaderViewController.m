@@ -184,7 +184,7 @@
             [self.view makeToast:[jsonDic objectForKey:@"msg"]];
             //            subing = NO;
         } else {
-            [self.view makeToast:@"跟投成功！"];
+            [self.view makeToast:@"领投成功！"];
             // [self recivedUpdateLinkMan:dataArray];
         }
     }

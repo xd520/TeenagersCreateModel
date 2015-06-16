@@ -54,8 +54,7 @@
     
     UIButton *comfirmBtn;
     
-    
-   
+    NSString *sessionid;
     
 }
 @end
@@ -86,22 +85,29 @@
     [super viewDidLoad];
     rateStr1 = @"";
     rateStr2 = @"";
-    
+    sessionid = @"";
     //相对于上面的接口，这个接口可以动画的改变statusBar的前景色
-    UIView *statusBarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
-    
-    statusBarView.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
-    
-    [self.view addSubview:statusBarView];
-    
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
+   
     
     
-    UINavigationBar *navibar = [[UINavigationBar alloc]initWithFrame:CGRectMake(0, 20, ScreenWidth, 44)];
+    UINavigationBar *navibar = [[UINavigationBar alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, 44)];
     navibar.userInteractionEnabled = YES;
     //navibar.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"navbar.png"]];
-    [navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
-    
+    //[navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        UIView *statusBarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+        
+        statusBarView.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        
+        [self.view addSubview:statusBarView];
+        
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
+        navibar.barTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        
+    } else {
+        navibar.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+    }
+
     
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     leftBtn.frame = CGRectMake(0, 12, 40, 20);
@@ -126,7 +132,7 @@
     label.textAlignment = NSTextAlignmentRight;
     label.font = [UIFont systemFontOfSize:14];
     label.text = @"类  别:";
-    [scrollView addSubview:label];
+    [scrollView addSubview:[UIView withLabel:label]];
     
     
     _check1 = [[QCheckBox alloc] initWithDelegate:self];
@@ -211,7 +217,7 @@
         label.textAlignment = NSTextAlignmentRight;
         label.font = [UIFont systemFontOfSize:14];
         label.text = [arr objectAtIndex:i];
-        [view1 addSubview:label];
+        [view1 addSubview:[UIView withLabel:label]];
         
     }
     
@@ -243,19 +249,9 @@
     passWordAgain.placeholder = @"请再一次输入密码";
     passWordAgain.font = [UIFont systemFontOfSize:12];
     [view1 addSubview:passWordAgain];
-    
-//身份证号码
-    phoneNum= [[UITextField alloc] initWithFrame:CGRectMake(100, 125, 200, 30)];
-    phoneNum.borderStyle = UITextBorderStyleLine;
-    phoneNum.clearButtonMode = UITextFieldViewModeWhileEditing;
-    phoneNum.delegate = self;
-    phoneNum.tag = 1;
-    phoneNum.placeholder = @"请输入身份证号";
-    phoneNum.font = [UIFont systemFontOfSize:12];
-    [view1 addSubview:phoneNum];
-    
+  
 // 姓名
-    name= [[UITextField alloc] initWithFrame:CGRectMake(100, 165, 200, 30)];
+    name= [[UITextField alloc] initWithFrame:CGRectMake(100, 125, 200, 30)];
     name.borderStyle = UITextBorderStyleLine;
     name.clearButtonMode = UITextFieldViewModeWhileEditing;
     name.delegate = self;
@@ -263,16 +259,27 @@
     name.font = [UIFont systemFontOfSize:12];
     [view1 addSubview:name];
     
-//手机
-    
-    passNum = [[UITextField alloc] initWithFrame:CGRectMake(100, 205, 200, 30)];
+//身份证号码
+    passNum = [[UITextField alloc] initWithFrame:CGRectMake(100, 165, 200, 30)];
     passNum.borderStyle = UITextBorderStyleLine;
     passNum.clearButtonMode = UITextFieldViewModeWhileEditing;
     passNum.tag = 2;
     passNum.delegate = self;
-    passNum.placeholder = @"请填写有效掌控的手机号码";
+    passNum.placeholder = @"请输入身份证号";
     passNum.font = [UIFont systemFontOfSize:12];
     [view1 addSubview:passNum];
+    
+    
+//手机
+    phoneNum= [[UITextField alloc] initWithFrame:CGRectMake(100, 205, 200, 30)];
+    phoneNum.borderStyle = UITextBorderStyleLine;
+    phoneNum.clearButtonMode = UITextFieldViewModeWhileEditing;
+    phoneNum.delegate = self;
+    phoneNum.tag = 1;
+    phoneNum.placeholder = @"请填写有效掌控的手机号码";
+    phoneNum.font = [UIFont systemFontOfSize:12];
+    [view1 addSubview:phoneNum];
+   
 //邮箱
     email = [[UITextField alloc] initWithFrame:CGRectMake(100, 245, 200, 30)];
     email.borderStyle = UITextBorderStyleLine;
@@ -293,6 +300,7 @@
     
     UIButton *checkBtn = [[UIButton alloc] initWithFrame:CGRectMake(220, 285, 80, 30)];
     checkBtn.backgroundColor = [UIColor grayColor];
+    checkBtn.tag = 11;
     [checkBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
     checkBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     [checkBtn addTarget:self action:@selector(checkBtnMethods:) forControlEvents:UIControlEventTouchUpInside];
@@ -330,7 +338,7 @@
         label.textAlignment = NSTextAlignmentRight;
         label.font = [UIFont systemFontOfSize:14];
         label.text = [arr objectAtIndex:i];
-        [view2 addSubview:label];
+        [view2 addSubview:[UIView withLabel:label]];
         
     }
     
@@ -438,6 +446,7 @@
     
     UIButton *checkBtn = [[UIButton alloc] initWithFrame:CGRectMake(220, 405, 80, 30)];
     checkBtn.backgroundColor = [UIColor grayColor];
+    checkBtn.tag = 12;
     [checkBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
     checkBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     [checkBtn addTarget:self action:@selector(checkBtnMethods:) forControlEvents:UIControlEventTouchUpInside];
@@ -455,8 +464,36 @@
 
 }
 
-
-
+//身份证号码验证
+#pragma mark - 身份证识别
+-(BOOL)checkIdentityCardNo:(NSString*)cardNo
+{
+    if (cardNo.length != 18) {
+        return  NO;
+    }
+    NSArray* codeArray = [NSArray arrayWithObjects:@"7",@"9",@"10",@"5",@"8",@"4",@"2",@"1",@"6",@"3",@"7",@"9",@"10",@"5",@"8",@"4",@"2", nil];
+    NSDictionary* checkCodeDic = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"1",@"0",@"X",@"9",@"8",@"7",@"6",@"5",@"4",@"3",@"2", nil]  forKeys:[NSArray arrayWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10", nil]];
+    
+    NSScanner* scan = [NSScanner scannerWithString:[cardNo substringToIndex:17]];
+    
+    int val;
+    BOOL isNum = [scan scanInt:&val] && [scan isAtEnd];
+    if (!isNum) {
+        return NO;
+    }
+    int sumValue = 0;
+    
+    for (int i =0; i<17; i++) {
+        sumValue+=[[cardNo substringWithRange:NSMakeRange(i , 1) ] intValue]* [[codeArray objectAtIndex:i] intValue];
+    }
+    
+    NSString* strlast = [checkCodeDic objectForKey:[NSString stringWithFormat:@"%d",sumValue%11]];
+    
+    if ([strlast isEqualToString: [[cardNo substringWithRange:NSMakeRange(17, 1)]uppercaseString]]) {
+        return YES;
+    }
+    return  NO;
+}
 
 
 
@@ -531,82 +568,59 @@
 }
 
 
--(void)checkLoadView {
-    
-    checkView = [[UIView alloc] initWithFrame:CGRectMake(0, 340, 320, 30)];
-    UILabel *checkLabel =  [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 100, 30)];
-    checkLabel.textAlignment = NSTextAlignmentRight;
-    checkLabel.font = [UIFont systemFontOfSize:15];
-    checkLabel.text = @"手机验证码:";
-    [checkView addSubview:checkLabel];
-    checkText = [[UITextField alloc] initWithFrame:CGRectMake(110, 0, 110, 30)];
-    checkText.borderStyle = UITextBorderStyleLine;
-    checkText.clearButtonMode = UITextFieldViewModeWhileEditing;
-    checkText.delegate = self;
-    checkText.placeholder = @"请填写验证码";
-    checkText.font = [UIFont systemFontOfSize:12];
-    [checkView addSubview:checkText];
-    
-    UIButton *checkBtn = [[UIButton alloc] initWithFrame:CGRectMake(230, 0, 80, 30)];
-    checkBtn.backgroundColor = [UIColor grayColor];
-    [checkBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
-    checkBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    [checkBtn addTarget:self action:@selector(checkBtnMethods:) forControlEvents:UIControlEventTouchUpInside];
-    [checkView addSubview:checkBtn];
-
-    [scrollView addSubview:checkView];
-
-}
-
-
--(void)checkLoadViewData {
-    
-    checkView = [[UIView alloc] initWithFrame:CGRectMake(0, 420, 320, 30)];
-    UILabel *checkLabel =  [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 100, 30)];
-    checkLabel.textAlignment = NSTextAlignmentRight;
-    checkLabel.font = [UIFont systemFontOfSize:15];
-    checkLabel.text = @"手机验证码:";
-    [checkView addSubview:checkLabel];
-    checkText = [[UITextField alloc] initWithFrame:CGRectMake(110, 0, 110, 30)];
-    checkText.borderStyle = UITextBorderStyleLine;
-    checkText.clearButtonMode = UITextFieldViewModeWhileEditing;
-    checkText.delegate = self;
-    checkText.placeholder = @"请填写验证码";
-    checkText.font = [UIFont systemFontOfSize:12];
-    [checkView addSubview:checkText];
-    
-    UIButton *checkBtn = [[UIButton alloc] initWithFrame:CGRectMake(230, 0, 80, 30)];
-    checkBtn.backgroundColor = [UIColor grayColor];
-    [checkBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
-    checkBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    [checkBtn addTarget:self action:@selector(checkBtnMethods:) forControlEvents:UIControlEventTouchUpInside];
-    [checkView addSubview:checkBtn];
-    
-    [scrollView addSubview:checkView];
-    
-}
 
 -(void)checkBtnMethods:(UIButton *)btn {
-    if ([passNum.text isEqualToString:@""]) {
-        [self.view makeToast:@"请输入手机号" duration:0.5 position:@"center"];
-    } else {
-    
-        NSMutableDictionary *paraDic = [[NSMutableDictionary alloc] init];
-        [paraDic setObject:passNum.text forKey:@"mobile"];
-        
-        
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.dimBackground = YES; //加层阴影
-        hud.mode = MBProgressHUDModeIndeterminate;
-        hud.labelText = @"加载中...";
-        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-            [[NetworkModule sharedNetworkModule] postBusinessReqWithParamters:paraDic tag:kBusinessTagGetYzm owner:self];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
+   
+    if (btn.tag == 11) {
+        if ([phoneNum.text isEqualToString:@""]) {
+            [self.view makeToast:@"请输入手机号" duration:0.5 position:@"center"];
+        } else {
+            
+            NSMutableDictionary *paraDic = [[NSMutableDictionary alloc] init];
+            [paraDic setObject:phoneNum.text forKey:@"mobile"];
+            
+            
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            hud.dimBackground = YES; //加层阴影
+            hud.mode = MBProgressHUDModeIndeterminate;
+            hud.labelText = @"加载中...";
+            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                [[NetworkModule sharedNetworkModule] postBusinessReqWithParamters:paraDic tag:kBusinessTagGetYzm owner:self];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                });
             });
-        });
-    }
+        }
+  
+        
+    } else if (btn.tag == 12){
+    
+        if ([phoneNumTap.text isEqualToString:@""]) {
+            [self.view makeToast:@"请输入手机号" duration:0.5 position:@"center"];
+        } else {
+            
+            NSMutableDictionary *paraDic = [[NSMutableDictionary alloc] init];
+            [paraDic setObject:phoneNumTap.text forKey:@"mobile"];
+            
+            
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            hud.dimBackground = YES; //加层阴影
+            hud.mode = MBProgressHUDModeIndeterminate;
+            hud.labelText = @"加载中...";
+            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                [[NetworkModule sharedNetworkModule] postBusinessReqWithParamters:paraDic tag:kBusinessTagGetYzm owner:self];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                });
+            });
+        }
 
+    
+    }
+    
+    
+    
+    
 }
 
 
@@ -639,13 +653,45 @@
             hud.dimBackground = YES; //加层阴影
             hud.mode = MBProgressHUDModeIndeterminate;
             hud.labelText = @"加载中...";
+//            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+//                [self requestPersonRegister:rateStr1 yhm:userName.text khmc:name.text zjbh:phoneNum.text mobile:passNum.text email:email.text psw:passWord.text sjyzm:checkText.text tag:kBusinessTagGetRZF];
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    
+//                });
+//            });
             dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-                [self requestPersonRegister:rateStr1 yhm:userName.text khmc:name.text zjbh:phoneNum.text mobile:passNum.text email:email.text psw:passWord.text sjyzm:checkText.text tag:kBusinessTagGetRZF];
+                ASIFormDataRequest *requestReport  = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", SERVERURL, @"/app/register/rzf"]]];
+                NSLog(@"%@",requestReport);
+                
+                 NSString *cookieString = [NSString stringWithFormat:@"JSESSIONID=%@",sessionid];
+                
+                [requestReport addRequestHeader:@"Cookie" value:cookieString];
+                
+                [requestReport setPostValue:rateStr1 forKey:@"jgbz"];
+                [requestReport setPostValue:userName.text forKey:@"yhm"];
+                [requestReport setPostValue:name.text forKey:@"khmc"];
+                [requestReport setPostValue:@"0" forKey:@"zjlb"];
+                [requestReport setPostValue:passNum.text forKey:@"zjbh"];
+                [requestReport setPostValue:phoneNum.text forKey:@"mobile"];
+                [requestReport setPostValue:email.text forKey:@"email"];
+                [requestReport setPostValue:passWord.text forKey:@"psw"];
+                [requestReport setPostValue:checkText.text forKey:@"sjyzm"];
+                
+                //[requestReport buildPostBody];
+                
+                requestReport.delegate = self;
+                [requestReport setTimeOutSeconds:5];
+                [requestReport setDidFailSelector:@selector(urlRequestField:)];
+                [requestReport setDidFinishSelector:@selector(urlRequestSueccss:)];
+                
+                
+                [requestReport startAsynchronous];//异步传输
+            
+            
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                 });
             });
-        
         }
         
         
@@ -681,12 +727,53 @@
             hud.dimBackground = YES; //加层阴影
             hud.mode = MBProgressHUDModeIndeterminate;
             hud.labelText = @"加载中...";
+//            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+//                [self requestConfirmRegister:rateStr2 yhm:userNameTap.text khmc:lessName.text khqc:allName.text zjbh:phoneNumTap.text mobile:passNumTap.text email:emailTap.text psw:passWordTap.text frdb:personTap.text frdb_zjbh:codeTap.text sjyzm:checkTextTap.text tag:kBusinessTagGetRZF];
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    
+//                });
+//            });
+            
             dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-                [self requestConfirmRegister:rateStr2 yhm:userNameTap.text khmc:lessName.text khqc:allName.text zjbh:phoneNumTap.text mobile:passNumTap.text email:emailTap.text psw:passWordTap.text frdb:personTap.text frdb_zjbh:codeTap.text sjyzm:checkTextTap.text tag:kBusinessTagGetRZF];
+                ASIFormDataRequest *requestReport  = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", SERVERURL, @"/app/register/rzf"]]];
+                NSLog(@"%@",requestReport);
+                
+                NSString *cookieString = [NSString stringWithFormat:@"JSESSIONID=%@",sessionid];
+                
+                [requestReport addRequestHeader:@"Cookie" value:cookieString];
+                
+                [requestReport setPostValue:rateStr2 forKey:@"jgbz"];
+                [requestReport setPostValue:userNameTap.text forKey:@"yhm"];
+                [requestReport setPostValue:lessName.text forKey:@"khmc"];
+                [requestReport setPostValue:@"0" forKey:@"zjlb"];
+                [requestReport setPostValue:passNumTap.text forKey:@"zjbh"];
+                [requestReport setPostValue:phoneNumTap.text forKey:@"mobile"];
+                [requestReport setPostValue:emailTap.text forKey:@"email"];
+                [requestReport setPostValue:passWordTap.text forKey:@"psw"];
+                
+                [requestReport setPostValue:personTap.text forKey:@"frdb"];
+                [requestReport setPostValue:@"0" forKey:@"zjlb_frdb"];
+                [requestReport setPostValue:codeTap.text forKey:@"zjbh_frdb"];
+                [requestReport setPostValue:checkTextTap.text forKey:@"sjyzm"];
+                [requestReport setPostValue:allName.text forKey:@"khqc"];
+                
+                //[requestReport buildPostBody];
+                
+                requestReport.delegate = self;
+                [requestReport setTimeOutSeconds:5];
+                [requestReport setDidFailSelector:@selector(urlRequestField:)];
+                [requestReport setDidFinishSelector:@selector(urlRequestSueccss:)];
+                
+                
+                [requestReport startAsynchronous];//异步传输
+                
+                
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                 });
             });
+            
+            
             
         }
         
@@ -697,6 +784,37 @@
      [self.view makeToast:@"请选择类别" duration:1.0 position:@"center"];
     }
 }
+
+-(void) urlRequestField:(ASIHTTPRequest *)request {
+    NSError *error = [request error];
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [self.view makeToast:[NSString stringWithFormat:@"%@",error]];
+}
+
+-(void) urlRequestSueccss:(ASIHTTPRequest *)request {
+    NSData *data =[request responseData];
+    //NSXMLParser *parser = [[NSXMLParser alloc]initWithData:data];
+   // NSLog(@"%@",parser);
+    NSLog(@"xml data = %@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+    //[parser setDelegate:self];
+    //[parser parse];
+    
+    NSString *strss = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSMutableDictionary *dic = [strss JSONValue];
+    if ([[dic objectForKey:@"success"] boolValue] == 1){
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [self.view makeToast:@"注册成功"];
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    }  else {
+        [self.view makeToast:@"注册失败"];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+    }
+    
+}
+
+
+
 
 
 //获取品牌列表
@@ -713,7 +831,7 @@
     [paraDic setObject:eml forKey:@"email"];
     [paraDic setObject:psw forKey:@"psw"];
     [paraDic setObject:sjyzm forKey:@"sjyzm"];
-    
+    //[paraDic setObject:sessionid forKey:@"sessionid"];
     [[NetworkModule sharedNetworkModule] postBusinessReqWithParamters:paraDic tag:_tag owner:self];
     
 }
@@ -736,6 +854,7 @@
     [paraDic setObject:frdb_zjbh forKey:@"zjbh_frdb"];
     [paraDic setObject:sjyzm forKey:@"sjyzm"];
     [paraDic setObject:khqc forKey:@"khqc"];
+    //[paraDic setObject:sessionid forKey:@"sessionid"];
     [[NetworkModule sharedNetworkModule] postBusinessReqWithParamters:paraDic tag:_tag owner:self];
     
 }
@@ -793,8 +912,8 @@
             passNum.text = @"";
             passNumTap.text = @"";
         } else {
-            
-           [self.view makeToast:[jsonDic objectForKey:@"msg"] duration:1.0 position:@"center"];
+            sessionid = [jsonDic objectForKey:@"msg"];
+           [self.view makeToast:@"获取验证码成功" duration:1.0 position:@"center"];
             
         }
     } else if (tag == kBusinessTagGetYzmobile) {
@@ -979,12 +1098,36 @@
     
     } else if (textField == passNum){
         if (passNum.text.length == 18 || passNum.text.length == 15) {
+            NSString *emailRegex = @"^[0-9]*$";
+            NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+            bool sfzNo = [emailTest evaluateWithObject:[passNum.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
             
-            NSMutableDictionary *paraDic = [[NSMutableDictionary alloc] init];
-            [paraDic setObject:passNum.text forKey:@"zjbh"];
-            [paraDic setObject:@"0" forKey:@"zjlb"];
-            [[NetworkModule sharedNetworkModule] postBusinessReqWithParamters:paraDic tag:kBusinessTagGetYzzjbh owner:self];
-           
+            if (passNum.text.length == 15) {
+                if (!sfzNo) {
+                    //[self HUDShow:@"请输入正确的身份证号" delay:1.5];
+                  [self.view makeToast:@"请输入正确的身份证号" duration:1.0 position:@"center"];
+                    passNum.text = @"";
+                } else {
+                    NSMutableDictionary *paraDic = [[NSMutableDictionary alloc] init];
+                    [paraDic setObject:passNum.text forKey:@"zjbh"];
+                    [paraDic setObject:@"0" forKey:@"zjlb"];
+                    [[NetworkModule sharedNetworkModule] postBusinessReqWithParamters:paraDic tag:kBusinessTagGetYzzjbh owner:self];
+                }
+            }
+            else if (passNum.text.length == 18) {
+                bool sfz18NO = [self checkIdentityCardNo:passNum.text];
+                if (!sfz18NO) {
+                    //[self HUDShow:@"请输入正确的身份证号" delay:1.5];
+                    [self.view makeToast:@"请输入正确的身份证号" duration:1.0 position:@"center"];
+                    passNum.text = @"";
+                } else {
+                    NSMutableDictionary *paraDic = [[NSMutableDictionary alloc] init];
+                    [paraDic setObject:passNum.text forKey:@"zjbh"];
+                    [paraDic setObject:@"0" forKey:@"zjlb"];
+                    [[NetworkModule sharedNetworkModule] postBusinessReqWithParamters:paraDic tag:kBusinessTagGetYzzjbh owner:self];
+                }
+            }
+            
         } else {
 //证件验证
             [self.view makeToast:@"请输入正确身份证号" duration:1.0 position:@"center"];
@@ -993,11 +1136,37 @@
         
     } else if (textField == passNumTap){
         if (passNumTap.text.length == 18 || passNumTap.text.length == 15) {
+            NSString *emailRegex = @"^[0-9]*$";
+            NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+            bool sfzNo = [emailTest evaluateWithObject:[passNum.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
             
-            NSMutableDictionary *paraDic = [[NSMutableDictionary alloc] init];
-            [paraDic setObject:passNumTap.text forKey:@"zjbh"];
-            [paraDic setObject:@"0" forKey:@"zjlb"];
-            [[NetworkModule sharedNetworkModule] postBusinessReqWithParamters:paraDic tag:kBusinessTagGetYzzjbhAgain owner:self];
+            if (passNum.text.length == 15) {
+                if (!sfzNo) {
+                    //[self HUDShow:@"请输入正确的身份证号" delay:1.5];
+                    [self.view makeToast:@"请输入正确的身份证号" duration:1.0 position:@"center"];
+                     passNumTap.text = @"";
+                } else {
+                    
+                    NSMutableDictionary *paraDic = [[NSMutableDictionary alloc] init];
+                    [paraDic setObject:passNumTap.text forKey:@"zjbh"];
+                    [paraDic setObject:@"0" forKey:@"zjlb"];
+                    [[NetworkModule sharedNetworkModule] postBusinessReqWithParamters:paraDic tag:kBusinessTagGetYzzjbhAgain owner:self];
+                }
+            }
+            else if (passNum.text.length == 18) {
+                bool sfz18NO = [self checkIdentityCardNo:passNum.text];
+                if (!sfz18NO) {
+                    //[self HUDShow:@"请输入正确的身份证号" delay:1.5];
+                    [self.view makeToast:@"请输入正确的身份证号" duration:1.0 position:@"center"];
+                     passNumTap.text = @"";
+                } else {
+                    NSMutableDictionary *paraDic = [[NSMutableDictionary alloc] init];
+                    [paraDic setObject:passNumTap.text forKey:@"zjbh"];
+                    [paraDic setObject:@"0" forKey:@"zjlb"];
+                    [[NetworkModule sharedNetworkModule] postBusinessReqWithParamters:paraDic tag:kBusinessTagGetYzzjbhAgain owner:self];
+                    
+                }
+            }
             
         } else {
             //证件验证

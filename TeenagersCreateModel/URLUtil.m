@@ -156,6 +156,9 @@
         case 47:
             return [NSString stringWithFormat:@"%@%@", SERVERURL, @"/app/register/yzusername"];
             break;
+        case 48:
+            return [NSString stringWithFormat:@"%@%@", SERVERURL, @"/app/psncenter/invsigned/modifyTzr"];
+            break;
         default:
             break;
     }

@@ -169,9 +169,10 @@
     [clippingViewForLayerMask addSubview:headImage];
     
     
-    loginEndLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 63, ScreenWidth - 130, 12)];
+    loginEndLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 63, ScreenWidth - 130, 20)];
     loginEndLabel.font = [UIFont systemFontOfSize:12];
     loginEndLabel.textAlignment = NSTextAlignmentCenter;
+    loginEndLabel.backgroundColor = [UIColor clearColor];
     loginEndLabel.text = @"";
     [loginView addSubview:loginEndLabel];
     
@@ -184,6 +185,7 @@
     UILabel *loginBtnLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 110, 15)];
     loginBtnLabel.font = [UIFont boldSystemFontOfSize:15];
     loginBtnLabel.textColor = [UIColor brownColor];
+    loginBtnLabel.backgroundColor = [UIColor clearColor];
     loginBtnLabel.textAlignment = NSTextAlignmentCenter;
     loginBtnLabel.text = @"登录/注册";
     [loginBtn addSubview:loginBtnLabel];
@@ -205,9 +207,10 @@
     
     [loginView addSubview:loginBtn];
     
-    loginLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 40, ScreenWidth - 150, 13)];
+    loginLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 40, ScreenWidth - 150, 20)];
     loginLabel.font = [UIFont boldSystemFontOfSize:13];
     loginLabel.textAlignment = NSTextAlignmentCenter;
+    loginLabel.backgroundColor = [UIColor clearColor];
     if (delegate.array.count > 0) {
         
         Customer *customer = [delegate.array objectAtIndex:0];

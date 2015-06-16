@@ -48,20 +48,29 @@
     [super viewDidLoad];
     
     //相对于上面的接口，这个接口可以动画的改变statusBar的前景色
-    UIView *statusBarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
-    
-    statusBarView.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
-    
-    [self.view addSubview:statusBarView];
-    
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
+   
     
     [self.navigationController setNavigationBarHidden:YES];
     UINavigationBar *navibar = [[UINavigationBar alloc]initWithFrame:CGRectMake(0, 20, ScreenWidth, 44)];
    // navibar.userInteractionEnabled = YES;
     //navibar.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"navbar.png"]];
-    [navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
     
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        UIView *statusBarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+        
+        statusBarView.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        
+        [self.view addSubview:statusBarView];
+        
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
+        [navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
+        
+    } else {
+        navibar.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+    }
+
+     
     
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     leftBtn.frame = CGRectMake(0, 12, 40, 20);
@@ -299,7 +308,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                 //数据异常处理
                 [self.view makeToast:@"获取品牌失败"];
             } else {
-              [self.view makeToast:[jsonDic objectForKey:@"msg"]];
+                
+              //[self.view makeToast:[jsonDic objectForKey:@"msg"]];
+                
             }
             
             

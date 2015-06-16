@@ -15,11 +15,18 @@
 #import "MyInfoViewController.h"
 #import "RegisterViewController.h"
 #import "RegisterCreaterViewController.h"
+#import "BankCardViewController.h"
+#import "MyInvViewController.h"
+#import "MyPrjViewController.h"
+#import "DetailViewController.h"
+#import "TestViewController.h"
+#import "NoXibViewController.h"
 
 
 @interface LoginViewController ()
 {
     int count;
+    int addHeight;
 }
 @end
 
@@ -50,17 +57,21 @@
     count = 0;
    
     
-    //相对于上面的接口，这个接口可以动画的改变statusBar的前景色
-    UIView *statusBarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
-    
-    statusBarView.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
-    
-    [self.view addSubview:statusBarView];
-    
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
-   
-    
-    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+        addHeight = 20;
+        //相对于上面的接口，这个接口可以动画的改变statusBar的前景色
+        UIView *statusBarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+        statusBarView.backgroundColor = [UIColor clearColor];
+        //statusBarView.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        statusBarView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        [self.view addSubview:statusBarView];
+        
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
+        
+        
+    } else {
+        addHeight = 0;
+    }
    
     
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
@@ -72,20 +83,32 @@
     }
 #endif
     
-    UINavigationBar *navibar = [[UINavigationBar alloc]initWithFrame:CGRectMake(0, 20, ScreenWidth, 44)];
+    
+    
+    
+    UINavigationBar *navibar = [[UINavigationBar alloc]initWithFrame:CGRectMake(0, addHeight, ScreenWidth, 44)];
     navibar.userInteractionEnabled = YES;
     //navibar.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"navbar.png"]];
-    [navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
+   
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        [navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
+        
+    } else {
+        navibar.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+    }
+
     
     
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    leftBtn.frame = CGRectMake(0, 12, 40, 20);
+    leftBtn.frame = CGRectMake(0, 2 + addHeight/2, 40, 20);
     //leftBtn.center = CGPointMake(with/2,hight/2);
     [leftBtn setImage:[UIImage imageNamed:@"return_ico"] forState:UIControlStateNormal];
     [leftBtn addTarget:self action:@selector(push:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:leftBtn];
     UINavigationItem *navibarItem = [[UINavigationItem alloc]init];
     navibarItem.title = @"登录";
+    
     navibarItem.leftBarButtonItem= leftItem;
     // self.navigationItem.rightBarButtonItem = leftItem;
     [navibar pushNavigationItem:navibarItem animated:YES];
@@ -93,7 +116,7 @@
     
 
     
-    UIView *numLable = [[UIView alloc] initWithFrame:CGRectMake(0, 84 , ScreenWidth, 100)];
+    UIView *numLable = [[UIView alloc] initWithFrame:CGRectMake(0, 64 + addHeight , ScreenWidth, 100)];
     numLable.userInteractionEnabled = YES;
     numLable.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"head_bg"]];
     UIImageView *fenxian = [[UIImageView alloc] initWithFrame:CGRectMake(20, 50, ScreenWidth, 1)];
@@ -110,15 +133,17 @@
     phoneNumText.clearButtonMode = UITextFieldViewModeAlways;
     phoneNumText.placeholder = @"手机号码";
     phoneNumText.font = [UIFont systemFontOfSize:14];
+    phoneNumText.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     phoneNumText.textColor = [ColorUtil colorWithHexString:@"5e5f63"];
     phoneNumText.keyboardType = UIKeyboardTypeNamePhonePad;
     phoneNumText.delegate = self;
     [numLable addSubview:phoneNumText];
     
-    passWordText = [[UITextField alloc] initWithFrame:CGRectMake(49, 50, ScreenWidth - 50, 49)];
+    passWordText = [[UITextField alloc] initWithFrame:CGRectMake(49, 50 , ScreenWidth - 50, 49)];
     passWordText.delegate = self;
     passWordText.clearButtonMode = UITextFieldViewModeAlways;
     passWordText.font = [UIFont systemFontOfSize:14];
+    passWordText.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     passWordText.textColor = [ColorUtil colorWithHexString:@"5e5f63"];
     passWordText.keyboardType = UIKeyboardTypeNamePhonePad;
     passWordText.secureTextEntry = YES;
@@ -126,11 +151,12 @@
     [numLable addSubview:passWordText];
     
     _button1 =[UIButton buttonWithType:UIButtonTypeCustom];
-    _button1.frame = CGRectMake(30, 195, 27, 27);
+    _button1.frame = CGRectMake(30, 175 + addHeight, 27, 27);
     [_button1 addTarget:self action:@selector(defaultCheck:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_button1];
     
-    UILabel *remenberPassWordLable = [[UILabel alloc] initWithFrame:CGRectMake(62, 195 + 7, 60, 13)];
+    UILabel *remenberPassWordLable = [[UILabel alloc] initWithFrame:CGRectMake(62, 175 + 7 + addHeight, 60, 13)];
+    remenberPassWordLable.backgroundColor = [UIColor clearColor];
     remenberPassWordLable.font = [UIFont systemFontOfSize:13];
     remenberPassWordLable.text = @"记住密码";
     [self.view addSubview:remenberPassWordLable];
@@ -138,7 +164,7 @@
     UIButton *registerBtn =[UIButton buttonWithType:UIButtonTypeCustom];
     registerBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     //registerBtn.frame = CGRectMake(140, 200, 75, 15);
-    registerBtn.frame = CGRectMake(225, 200, 75, 15);
+    registerBtn.frame = CGRectMake(225, 180 + addHeight, 75, 15);
     [registerBtn setTitle:@"注册创建人" forState:UIControlStateNormal];
     [registerBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [registerBtn addTarget:self action:@selector(defaultCheck:)
@@ -163,7 +189,7 @@
     
     
     UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    loginBtn.frame = CGRectMake(92, 195 + 37 , ScreenWidth - 184, 47);
+    loginBtn.frame = CGRectMake(92, 175 + 37 + addHeight, ScreenWidth - 184, 47);
     //initWithFrame:CGRectMake(0, 0, 21, 21)];
     [loginBtn setImage:[UIImage imageNamed:@"btn_dl"] forState:UIControlStateNormal];
     [loginBtn addTarget:self action:@selector(loginButton) forControlEvents:UIControlEventTouchUpInside];
@@ -353,7 +379,12 @@
         
         if ([[jsonDic objectForKey:@"success"] boolValue] == 0) {
             //数据异常处理
-            [self.view makeToast:[jsonDic objectForKey:@"msg"]];
+            if ([[jsonDic objectForKey:@"msg"] isEqualToString:@"code:-190101996,msg:输入参数有误"]) {
+                [self.view makeToast:@"输入用户名有误,请重新输入" duration:1.0 position:@"center"];
+            } else {
+            [self.view makeToast:@"输入密码有误,请重新输入" duration:1.0 position:@"center"];
+            }
+            
             NSLog(@"%@",self.customerName);
             //[self.myViewController.loginLabel setText:@"欢迎来到投资管理系统!!!!"];
 
@@ -404,14 +435,37 @@
             
             }
             
-            [self.view makeToast:[jsonDic objectForKey:@"msg"]];
+            [self.myViewController.view makeToast:@"登录成功!"];
             
             [self.myViewController.loginLabel setText:[NSString stringWithFormat:@"欢迎您，%@，登录成功！",[[jsonDic objectForKey:@"object"] objectForKey:@"khxm"]]];
                       
-            [self.navigationController popViewControllerAnimated:YES];
+           
+            AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            if ([delegate.tagCountStr isEqualToString:@"1"]) {
+                BankCardViewController *VC = [[BankCardViewController alloc]init];
+                VC.hidesBottomBarWhenPushed = YES;
+                [self.navigationController setViewControllers:@[[self.navigationController.viewControllers firstObject],VC]];
+                delegate.tagCountStr = @"";
+            } else if ([delegate.tagCountStr isEqualToString:@"2"]){
+                
+                MyInvViewController *VC = [[MyInvViewController alloc]init];
+                VC.hidesBottomBarWhenPushed = YES;
+                [self.navigationController setViewControllers:@[[self.navigationController.viewControllers firstObject],VC]];
+                 delegate.tagCountStr = @"";
+            } else if ([delegate.tagCountStr isEqualToString:@"3"]){
+                MyPrjViewController *VC = [[MyPrjViewController alloc]init];
+                VC.hidesBottomBarWhenPushed = YES;
+                [self.navigationController setViewControllers:@[[self.navigationController.viewControllers firstObject],VC]];
+                 delegate.tagCountStr = @"";
+            }else if ([delegate.tagCountStr isEqualToString:@"5"]){
+                DetailViewController *VC = [[DetailViewController alloc]init];
+                VC.hidesBottomBarWhenPushed = YES;
+                [self.navigationController setViewControllers:@[[self.navigationController.viewControllers firstObject],VC]];
+                 delegate.tagCountStr = @"";
+            } else {
             
-            
-            
+                 [self.navigationController popViewControllerAnimated:YES];
+            }
             
         }
     }
@@ -448,6 +502,13 @@
 }
 
 -(void) loginButton{
+    
+    // TestViewController *cv = [[TestViewController alloc] init];
+   // NoXibViewController *cv = [[NoXibViewController alloc] init];
+   // cv.hidesBottomBarWhenPushed = YES;
+    //[self.navigationController pushViewController:cv animated:YES];
+    
+    
     
     [phoneNumText resignFirstResponder];
     [passWordText resignFirstResponder];

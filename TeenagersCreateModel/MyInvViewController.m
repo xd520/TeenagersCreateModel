@@ -21,6 +21,7 @@
     BOOL hasMore;
     UITableViewCell *moreCell;
     UILabel *totalLabel;
+    NSMutableArray *array_str;
     
 }
 @end
@@ -50,7 +51,7 @@
     [super viewDidLoad];
     start = @"1";
     limit = @"10";
-    
+    array_str = [[NSMutableArray alloc] init];
     //相对于上面的接口，这个接口可以动画的改变statusBar的前景色
     UIView *statusBarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
     
@@ -64,9 +65,15 @@
     UINavigationBar *navibar = [[UINavigationBar alloc]initWithFrame:CGRectMake(0, 20, ScreenWidth, 44)];
     navibar.userInteractionEnabled = YES;
     //navibar.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"navbar.png"]];
-    [navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
+   // [navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
     
-    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        navibar.barTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        
+    } else {
+        navibar.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+    }
+
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     leftBtn.frame = CGRectMake(0, 12, 40, 20);
     [leftBtn setImage:[UIImage imageNamed:@"return_ico"] forState:UIControlStateNormal];
@@ -212,6 +219,7 @@
             [statusLabel setBackgroundColor:[UIColor clearColor]];
             for (NSDictionary *object in dataStatus) {
                 if ([[object objectForKey:@"VALUE"] isEqualToString:[[dataList objectAtIndex:indexPath.row] objectForKey:@"FID_STATUS"]]) {
+                    [array_str addObject:[object objectForKey:@"NAME"]];
                   statusLabel.text = [NSString stringWithFormat:@"项目状态:%@",[object objectForKey:@"NAME"]];
                      [backView addSubview:statusLabel];
                 }
@@ -297,19 +305,31 @@
 - (void)tableView:(UITableView *)tbleView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == [dataList count] + 1) {
+    if (indexPath.row == [dataList count]) {
         for (UILabel *label in [moreCell.contentView subviews]) {
             if ([label.text isEqualToString:@"正在加载中..."]) {
                 
             } else {
                 label.text = @"正在加载中...";
-                //[self requestCategoryList:funCode start:@"" limit:rtKeyListStr tag:kBusinessTagGetFun2List];
+                //添加指示器及遮罩
+                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                hud.dimBackground = YES; //加层阴影
+                hud.mode = MBProgressHUDModeIndeterminate;
+                hud.labelText = @"加载中...";
+                dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                    [self requestCategoryList:kBusinessTagGetMyinv];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                    });
+                });
+                //获取类别信息
                 [tbleView deselectRowAtIndexPath:indexPath animated:YES];
             }
         }
     } else {
         DetailInvViewController *cv = [[DetailInvViewController alloc] init];
         cv.hidesBottomBarWhenPushed = YES;
+        cv.str = [array_str objectAtIndex:indexPath.row];
         cv.dic = [dataList objectAtIndex:indexPath.row];
         [self.navigationController pushViewController:cv animated:NO];
         
@@ -375,7 +395,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
             //数据异常处理
             [self.view makeToast:@"获取投资失败"];
         } else {
-
+            [self.view makeToast:@"获取投资成功"];
             [self recivedCategoryList:dataArray withTotalPrice:totalPrice withMyInv:myInvResult];
         }
     }

@@ -29,16 +29,29 @@
     
     
     _array = [[NSMutableArray alloc] init];
+    self.tagCountStr = [[NSString alloc] init];
     _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+       [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"title_bg"] forBarMetrics:UIBarMetricsDefault];
+        
+    }
+    
+    
+    UIView *statusBarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+    
+    statusBarView.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+    
+    [self.window addSubview:statusBarView];
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
+    
+    
     
     self.osTabVC = [self getRootViewControler];
     self.window.rootViewController = self.osTabVC;
     
     _window.backgroundColor = [UIColor whiteColor];
-  
-    
-    
-	
       [_window makeKeyAndVisible];
     
  //是否要加入引导页
@@ -70,10 +83,21 @@
     FirstViewController *vcMessage = [[FirstViewController alloc] init];
     
     UINavigationController *ncMessage= [[UINavigationController alloc] initWithRootViewController:vcMessage];
-    [ncMessage.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bg"] forBarMetrics:UIBarMetricsDefault];
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        ncMessage.navigationBar.barTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        
+    } else {
+       ncMessage.navigationBar.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+    }
+    
+    
+    
+   // [ncMessage.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bg"] forBarMetrics:UIBarMetricsDefault];
     UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(50, 5, 220, 30)];
     lab.font = [UIFont boldSystemFontOfSize:20];
     lab.textColor = [UIColor whiteColor];
+    lab.backgroundColor = [UIColor clearColor];
     lab.text = @"首 页";
     lab.textAlignment = NSTextAlignmentCenter;
     [ncMessage.navigationBar addSubview:lab];
@@ -82,11 +106,22 @@
     ProjectIntroductionViewController *vcRemind=[[ProjectIntroductionViewController alloc] init];
     //app.ncMessage=ncMessage;
     UINavigationController *ncRemind = [[UINavigationController alloc] initWithRootViewController:vcRemind];
-    [ncRemind.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bg"] forBarMetrics:UIBarMetricsDefault];
+    //[ncRemind.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bg"] forBarMetrics:UIBarMetricsDefault];
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        ncRemind.navigationBar.barTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        
+    } else {
+        ncRemind.navigationBar.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+    }
+
+    
+    
     UILabel *lab1 = [[UILabel alloc] initWithFrame:CGRectMake(50, 5, 220, 30)];
     lab1.font = [UIFont boldSystemFontOfSize:20];
     lab1.textColor = [UIColor whiteColor];
     lab1.text = @"我的投资";
+    lab1.backgroundColor = [UIColor clearColor];
     lab1.textAlignment = NSTextAlignmentCenter;
     [ncRemind.navigationBar addSubview:lab1];
     
@@ -94,9 +129,17 @@
     ncRemind.navigationBar.hidden = NO;
     IndividualCenterViewController *vcApplication = [[IndividualCenterViewController alloc] init];
     UINavigationController *ncApplication = [[UINavigationController alloc] initWithRootViewController:vcApplication];
-    [ncApplication.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bg"] forBarMetrics:UIBarMetricsDefault];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        ncApplication.navigationBar.barTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        
+    } else {
+        ncApplication.navigationBar.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+    }
+    
+   // [ncApplication.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bg"] forBarMetrics:UIBarMetricsDefault];
     UILabel *lab2 = [[UILabel alloc] initWithFrame:CGRectMake(50, 5, 220, 30)];
     lab2.text = @"个人中心";
+    lab2.backgroundColor = [UIColor clearColor];
     lab2.font = [UIFont boldSystemFontOfSize:20];
     lab2.textColor = [UIColor whiteColor];
     lab2.textAlignment = NSTextAlignmentCenter;
@@ -106,9 +149,19 @@
     
     MyAccountViewController *vcAddressList=[[MyAccountViewController alloc]init];
     UINavigationController *ncAddressList = [[UINavigationController alloc] initWithRootViewController:vcAddressList];
-    [ncAddressList.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bg"] forBarMetrics:UIBarMetricsDefault];
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        ncAddressList.navigationBar.barTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        
+    } else {
+        ncAddressList.navigationBar.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+    }
+
+    
+   // [ncAddressList.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bg"] forBarMetrics:UIBarMetricsDefault];
     UILabel *lab3 = [[UILabel alloc] initWithFrame:CGRectMake(50, 5, 220, 30)];
     lab3.text = @"资 讯";
+    lab3.backgroundColor = [UIColor clearColor];
     lab3.font = [UIFont boldSystemFontOfSize:20];
     lab3.textColor = [UIColor whiteColor];
     lab3.textAlignment = NSTextAlignmentCenter;
@@ -428,6 +481,7 @@
     [_array removeAllObjects];
     _array = nil;
     _numStr = nil;
+    _tagCountStr = nil;
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
 

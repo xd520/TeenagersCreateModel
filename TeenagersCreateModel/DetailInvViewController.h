@@ -11,5 +11,6 @@
 @interface DetailInvViewController : UIViewController
 
 @property(nonatomic,strong)NSMutableDictionary *dic;
+@property(nonatomic,strong)NSString *str;
 
 @end

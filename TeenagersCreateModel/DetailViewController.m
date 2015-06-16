@@ -77,6 +77,15 @@
     //navBar.backgroundColor = [UIColor redColor];
     [navBar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
     
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        navBar.barTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        
+    } else {
+        navBar.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+    }
+    
+    
+    
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     leftBtn.frame = CGRectMake(0, 12, 40, 20);
     [leftBtn setImage:[UIImage imageNamed:@"return_ico"] forState:UIControlStateNormal];
@@ -84,7 +93,7 @@
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:leftBtn];
     UINavigationItem *navibarItem = [[UINavigationItem alloc]init];
    // navibarItem.title = titleName;
-    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(31.5, 15, ScreenWidth - 63, 14)];
+    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 15, ScreenWidth - 70, 14)];
     nameLabel.text = titleName;
     nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.textColor = [UIColor blackColor];
@@ -135,7 +144,7 @@
     
     
     view3 = [[UIView alloc] initWithFrame:CGRectMake(0, segmentedControl.frame.origin.y + segmentedControl.frame.size.height + 5, ScreenWidth, ScreenHeight - segmentedControl.frame.origin.y - segmentedControl.frame.size.height)];
-    view3.backgroundColor = [UIColor brownColor];
+    //view3.backgroundColor = [UIColor brownColor];
     view3.hidden = YES;
     
     UISwipeGestureRecognizer *recognizer3 = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFromView2:)];
@@ -467,7 +476,7 @@
     if (btn.tag == 200001) {
         AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         Customer *customer = [delegate.array objectAtIndex:0];
-        if (customer.isTZRQX) {
+        if (customer.isLTR) {
             
         IWLeaderViewController *cv = [[IWLeaderViewController alloc] init];
             cv.hidesBottomBarWhenPushed = YES;

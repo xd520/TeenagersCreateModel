@@ -42,7 +42,7 @@
     backBtn.frame = CGRectMake(10, 20 + 12, 40, 20);
     [backBtn setBackgroundImage:[UIImage imageNamed:@"return_ico"]
                        forState:UIControlStateNormal];
-    [backBtn addTarget:self action:@selector(push) forControlEvents:UIControlEventTouchUpInside];
+    [backBtn addTarget:self action:@selector(push:) forControlEvents:UIControlEventTouchUpInside];
     [img addSubview:backBtn];
     
     [self.view addSubview:img];
@@ -60,7 +60,7 @@
     [self.view addSubview:rgjeNameLabel];
     
     UILabel *rgjeLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 94 + 13, ScreenWidth - 20, 17)];
-    rgjeLabel.text = [NSString stringWithFormat:@"%.2f",[[self.dic objectForKey:@"FID_RGJE"] floatValue]];
+    rgjeLabel.text = [NSString stringWithFormat:@"￥%.2f",[[self.dic objectForKey:@"FID_RGJE"] floatValue]];
     rgjeLabel.textAlignment = NSTextAlignmentCenter;
     rgjeLabel.font = [UIFont systemFontOfSize:17];
     [self.view addSubview:rgjeLabel];
@@ -75,7 +75,7 @@
     [self.view addSubview:djjeNameLabel];
     
     UILabel *djjeLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 147, ScreenWidth - 20, 17)];
-    djjeLabel.text = [NSString stringWithFormat:@"%.2f",[[self.dic objectForKey:@"FID_DJJE"] floatValue]];
+    djjeLabel.text = [NSString stringWithFormat:@"￥%.2f",[[self.dic objectForKey:@"FID_DJJE"] floatValue]];
     djjeLabel.textAlignment = NSTextAlignmentCenter;
     djjeLabel.font = [UIFont systemFontOfSize:17];
     [self.view addSubview:djjeLabel];
@@ -88,7 +88,7 @@
     
     UILabel *codeLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 174, 100, 13)];
     codeLabel.text = [self.dic objectForKey:@"FID_CPDM"];
-    codeLabel.textAlignment = NSTextAlignmentCenter;
+    //codeLabel.textAlignment = NSTextAlignmentCenter;
     codeLabel.font = [UIFont boldSystemFontOfSize:13];
     [self.view addSubview:codeLabel];
     
@@ -102,8 +102,9 @@
     [self.view addSubview:stutasNameLabel];
     
     UILabel *stutasLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 194, 100, 13)];
-    stutasLabel.text = [self.dic objectForKey:@"FID_STATUS"];
-    stutasLabel.textAlignment = NSTextAlignmentCenter;
+   // stutasLabel.text = [self.dic objectForKey:@"FID_STATUS"];
+    stutasLabel.text = self.str;
+    //stutasLabel.textAlignment = NSTextAlignmentCenter;
     stutasLabel.font = [UIFont boldSystemFontOfSize:13];
     [self.view addSubview:stutasLabel];
     
@@ -116,7 +117,7 @@
     
     UILabel *buyLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 214, 100, 13)];
     buyLabel.text = [self.dic objectForKey:@"FID_RGRQ"];
-    buyLabel.textAlignment = NSTextAlignmentCenter;
+   //buyLabel.textAlignment = NSTextAlignmentCenter;
     buyLabel.font = [UIFont systemFontOfSize:13];
     [self.view addSubview:buyLabel];
     
@@ -129,7 +130,7 @@
     
     UILabel *delegateLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 234, 100, 13)];
     delegateLabel.text = [self.dic objectForKey:@"FID_WTH"];
-    delegateLabel.textAlignment = NSTextAlignmentCenter;
+    //delegateLabel.textAlignment = NSTextAlignmentCenter;
     delegateLabel.font = [UIFont systemFontOfSize:13];
     [self.view addSubview:delegateLabel];
     
@@ -142,7 +143,7 @@
     
     UILabel *userLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 254, 200, 13)];
     userLabel.text = [self.dic objectForKey:@"FID_KHH"];
-    userLabel.textAlignment = NSTextAlignmentCenter;
+   // userLabel.textAlignment = NSTextAlignmentLeft;
     userLabel.font = [UIFont systemFontOfSize:13];
     [self.view addSubview:userLabel];
     
@@ -151,25 +152,25 @@
     sqNameLabel.text = @"申请状态:";
     sqNameLabel.textAlignment = NSTextAlignmentRight;
     sqNameLabel.font = [UIFont systemFontOfSize:13];
-    [self.view addSubview:sqNameLabel];
+    //[self.view addSubview:sqNameLabel];
     
     UILabel *sqLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 274, 100, 17)];
     sqLabel.text = [self.dic objectForKey:@"FID_ZT"];
     sqLabel.textAlignment = NSTextAlignmentCenter;
     sqLabel.font = [UIFont systemFontOfSize:13];
-    [self.view addSubview:sqLabel];
+   // [self.view addSubview:sqLabel];
 //撤销标志
     UILabel *cxNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 294, 100, 13)];
     cxNameLabel.text = @"撤销标志:";
     cxNameLabel.textAlignment = NSTextAlignmentRight;
     cxNameLabel.font = [UIFont systemFontOfSize:13];
-    [self.view addSubview:cxNameLabel];
+    //[self.view addSubview:cxNameLabel];
     
     UILabel *cxLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 294, 100, 13)];
     cxLabel.text = [self.dic objectForKey:@"FID_CXBZ"];
     cxLabel.textAlignment = NSTextAlignmentCenter;
     cxLabel.font = [UIFont systemFontOfSize:13];
-    [self.view addSubview:cxLabel];
+    //[self.view addSubview:cxLabel];
     
     
     
@@ -177,7 +178,7 @@
     
 }
 
--(void)push {
+-(void)push:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 
 }

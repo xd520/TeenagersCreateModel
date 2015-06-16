@@ -221,6 +221,10 @@
     self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.frame.size.height - self.pageControlY, self.frame.size.width, 20)];
     [self.pageControl setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
     [self.pageControl addTarget:self action:@selector(showPanelAtPageControl) forControlEvents:UIControlEventValueChanged];
+    
+    [self.pageControl setCurrentPageIndicatorTintColor:[UIColor blueColor]];
+    [self.pageControl setPageIndicatorTintColor:[UIColor colorWithRed:0 green:0 blue:1 alpha:0.38]];
+    
     self.pageControl.numberOfPages = _pages.count;
     [self addSubview:self.pageControl];
     

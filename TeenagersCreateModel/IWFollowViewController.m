@@ -167,16 +167,16 @@
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         if ([[jsonDic objectForKey:@"success"] boolValue] == NO) {
             //数据异常处理
-            if ([[jsonDic objectForKey:@"object"] isEqualToString:@"loginTimeout"]) {
+           // if ([[jsonDic objectForKey:@"object"] isEqualToString:@"loginTimeout"]) {
                 
-                LoginViewController *vc = [[LoginViewController alloc] init];
-                vc.hidesBottomBarWhenPushed = YES;
-                [self.navigationController pushViewController:vc animated:NO];
+               // LoginViewController *vc = [[LoginViewController alloc] init];
+                //vc.hidesBottomBarWhenPushed = YES;
+               // [self.navigationController pushViewController:vc animated:NO];
                 
-            } else {
+           // } else {
                 
                 [self.view makeToast:[jsonDic objectForKey:@"msg"]];
-            }
+           // }
             
             //            subing = NO;
         } else {

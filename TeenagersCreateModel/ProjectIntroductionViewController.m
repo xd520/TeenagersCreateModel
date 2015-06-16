@@ -164,7 +164,8 @@
     
     industryLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, ScreenWidth/3 - 20, 40)];
     industryLabel.text = @"行业";
-    industryLabel.font = [UIFont systemFontOfSize:13];
+    industryLabel.backgroundColor = [UIColor clearColor];
+    industryLabel.font = [UIFont systemFontOfSize:16];
     industryLabel.textAlignment = NSTextAlignmentCenter;
     [industryBtn addSubview:industryLabel];
     
@@ -181,7 +182,8 @@
     
     proviceLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, ScreenWidth/3 - 20, 40)];
     proviceLabel.text = @"地区";
-    proviceLabel.font = [UIFont systemFontOfSize:13];
+    proviceLabel.backgroundColor = [UIColor clearColor];
+    proviceLabel.font = [UIFont systemFontOfSize:16];
     proviceLabel.textAlignment = NSTextAlignmentCenter;
     [proviceBtn addSubview:proviceLabel];
     
@@ -197,7 +199,8 @@
     
     statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, ScreenWidth/3 - 20, 40)];
     statusLabel.text = @"项目阶段";
-    statusLabel.font = [UIFont systemFontOfSize:13];
+    statusLabel.backgroundColor = [UIColor clearColor];
+    statusLabel.font = [UIFont systemFontOfSize:16];
     statusLabel.textAlignment = NSTextAlignmentCenter;
     [statusBtn addSubview:statusLabel];
     
@@ -482,6 +485,7 @@
             [tipLabel setFont:[UIFont systemFontOfSize:15]];
             [tipLabel setTextAlignment:NSTextAlignmentCenter];
             [tipLabel setTextColor:[ColorUtil colorWithHexString:@"404040"]];
+            tipLabel.backgroundColor = [UIColor clearColor];
             [tipLabel setText:@"没有任何商品哦~"];
             [backView addSubview:tipLabel];
             [cell.contentView addSubview:backView];
@@ -643,7 +647,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         }
     } else {
           AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        
+         delegate.tagCountStr = @"5";
         [[NSURLCache sharedURLCache] removeAllCachedResponses];
         if (delegate.array.count > 0) {
               Customer *custer = [delegate.array objectAtIndex:0];
@@ -665,7 +669,11 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                 LoginViewController *vc = [[LoginViewController alloc] init];
                 vc.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:vc animated:NO];
-                
+                if ([[dataList objectAtIndex:indexPath.row] objectForKey:@"cpdm"] == [NSNull null]) {
+                    delegate.numStr = @"";
+                } else {
+                    delegate.numStr = [[dataList objectAtIndex:indexPath.row] objectForKey:@"cpdm"];
+                }
                 
             }
         } else {
@@ -673,7 +681,11 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
             LoginViewController *vc = [[LoginViewController alloc] init];
             vc.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:vc animated:NO];
-        
+            if ([[dataList objectAtIndex:indexPath.row] objectForKey:@"cpdm"] == [NSNull null]) {
+                delegate.numStr = @"";
+            } else {
+                delegate.numStr = [[dataList objectAtIndex:indexPath.row] objectForKey:@"cpdm"];
+            }
         }
     }
 }

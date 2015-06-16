@@ -74,7 +74,15 @@
     UINavigationBar *navibar = [[UINavigationBar alloc]initWithFrame:CGRectMake(0, 20, ScreenWidth, 44)];
     navibar.userInteractionEnabled = YES;
     //navibar.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"navbar.png"]];
-    [navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
+    //[navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        navibar.barTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        
+    } else {
+        navibar.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+    }
+
     
     
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -113,7 +121,7 @@
                 baseLabel.textAlignment = NSTextAlignmentRight;
                 baseLabel.font = [UIFont boldSystemFontOfSize:14];
                 baseLabel.text = [arr objectAtIndex:i];
-                [scrollView addSubview:baseLabel];
+                [scrollView addSubview:[UIView withLabel:baseLabel]];
                 
                 
                 
@@ -258,14 +266,14 @@
         baseLabel.textAlignment = NSTextAlignmentRight;
             baseLabel.font = [UIFont boldSystemFontOfSize:14];
             baseLabel.text = [arr objectAtIndex:i];
-            [scrollView addSubview:baseLabel];
+           [scrollView addSubview:[UIView withLabel:baseLabel]];
         } else if (i == 6){
             UILabel *baseLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,20 + 40*i  + 80, 80, 40)];
             baseLabel.numberOfLines = 0;
             baseLabel.textAlignment = NSTextAlignmentRight;
             baseLabel.font = [UIFont boldSystemFontOfSize:14];
             baseLabel.text = [arr objectAtIndex:i];
-            [scrollView addSubview:baseLabel];
+           [scrollView addSubview:baseLabel];
         
         }
         else {
@@ -274,7 +282,7 @@
             baseLabel.textAlignment = NSTextAlignmentRight;
             baseLabel.font = [UIFont boldSystemFontOfSize:14];
             baseLabel.text = [arr objectAtIndex:i];
-            [scrollView addSubview:baseLabel];
+           [scrollView addSubview:[UIView withLabel:baseLabel]];
         
         
         

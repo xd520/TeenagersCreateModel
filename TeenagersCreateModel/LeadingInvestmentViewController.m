@@ -16,7 +16,6 @@
     UITextView *textSourceView;
     UIScrollView *scrollView;
     NSMutableArray *array1;
-    int number;
     UIView *baseView;
 }
 @end
@@ -53,13 +52,20 @@
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
     
-    number = 0;
     array1 = [[NSMutableArray alloc] init];
     
     UINavigationBar *navibar = [[UINavigationBar alloc]initWithFrame:CGRectMake(0, 20, ScreenWidth, 44)];
     navibar.userInteractionEnabled = YES;
     //navibar.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"navbar.png"]];
-    [navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
+   // [navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        navibar.barTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        
+    } else {
+        navibar.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+    }
+
+    
     
     
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -81,13 +87,12 @@
     
     NSArray *arr = @[@"投资理念:",@"投资经历:",@"社会资源:",@"证明文件:"];
     for (int i = 0; i < arr.count; i++) {
-        UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(10, 10 + 80*i + 10 *i, 80, 80)];
+        UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(0, 10 + 80*i + 10 *i, 75, 80)];
         lab.text = [arr objectAtIndex:i];
-        lab.textAlignment = NSTextAlignmentCenter;
+        lab.textAlignment = NSTextAlignmentRight;
         lab.font = [UIFont boldSystemFontOfSize:14];
-        [scrollView addSubview:lab];
+        [scrollView addSubview:[UIView withLabel:lab]];
     }
-    
     
     
  //投资理念
@@ -409,7 +414,6 @@
     [baseView removeFromSuperview];
     baseView = nil;
     [self reloadImageView];
-    
 }
 
 
@@ -484,16 +488,16 @@
     
     //NSMutableDictionary *paraDic = [[NSMutableDictionary alloc] init];
     
-        if (number > 12) {
+        if (array1.count == 12) {
             [self.view makeToast:@"最多只能上传12张图片" duration:1 position:@"center"];
         } else {
-            number++;
+          
             MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             hud.dimBackground = YES; //加层阴影
             hud.mode = MBProgressHUDModeIndeterminate;
             hud.labelText = @"加载中...";
             dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-                [[NetworkModule sharedNetworkModule]postBusinessReqWithParamtersAndFile:nil number:number withFileName:@"identfy" fileData:imageData tag:kBusinessTagGetRegisterUpfile owner:self];
+                [[NetworkModule sharedNetworkModule]postBusinessReqWithParamtersAndFile:nil number:(int)array1.count  withFileName:@"identfy" fileData:imageData tag:kBusinessTagGetRegisterUpfile owner:self];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                 });
@@ -624,12 +628,11 @@
             //数据异常处理
             [self.view makeToast:[jsonDic objectForKey:@"msg"]];
         } else {
-            
-            [self.view makeToast:[NSString stringWithFormat:@"上传成功%d张",number]];
             [array1 addObject:[jsonDic objectForKey:@"object"]];
-                            [baseView removeFromSuperview];
-                baseView = nil;
-                [self reloadImageView];
+            [self.view makeToast:[NSString stringWithFormat:@"上传成功%ld张",array1.count]];
+            [baseView removeFromSuperview];
+            baseView = nil;
+            [self reloadImageView];
             
         }
     }  else if (tag==kBusinessTagGetLtrSq) {
@@ -646,8 +649,6 @@
             
         }
     }
-    
-    
     
     
     [[NetworkModule sharedNetworkModule] cancel:tag];

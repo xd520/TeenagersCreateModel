@@ -58,6 +58,7 @@ enum kBusinessTag
     kBusinessTagGetYzmobileAgain = 45,
     kBusinessTagGetYzzjbhAgain = 46,
     kBusinessTagGetUpdateUserNameAgain = 47,
+    kBusinessTagGetModifyTzr = 48,
    
 };
 typedef enum kBusinessTag kBusinessTag;

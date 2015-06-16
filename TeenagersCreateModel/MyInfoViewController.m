@@ -13,6 +13,7 @@
 #import "UpdatePhoneNumViewController.h"
 #import "UpDateUserNameViewController.h"
 #import "ZipArchive.h"
+#import "UpDateInfoViewController.h"
 
 
 @interface MyInfoViewController ()
@@ -71,8 +72,14 @@
     UINavigationBar *navibar = [[UINavigationBar alloc]initWithFrame:CGRectMake(0, 20, ScreenWidth, 44)];
     navibar.userInteractionEnabled = YES;
     //navibar.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"navbar.png"]];
-    [navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
-    
+   // [navibar setBackgroundImage:[UIImage imageNamed:@"title_bg"]  forBarMetrics:UIBarMetricsDefault];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        navibar.barTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+        
+    } else {
+        navibar.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bg"]];
+    }
+
     
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     leftBtn.frame = CGRectMake(0, 12, 40, 20);
@@ -334,14 +341,32 @@
     
 // 投资人信息
     
-    if (customer.isTZRQX) {
+    if (customer.isHGTZR) {
     
     UILabel *investorsLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 401, ScreenWidth, 39)];
     investorsLabel.text = @" 投资人信息";
     investorsLabel.textColor = [ColorUtil colorWithHexString:@"000000"];
     investorsLabel.font = [UIFont systemFontOfSize:16];
     investorsLabel.backgroundColor = [UIColor whiteColor];
+        investorsLabel.userInteractionEnabled = YES;
+        if ([customer.sessionId isEqualToString:@"0"]) {
+            
+            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            btn.backgroundColor = [UIColor grayColor];
+            btn.titleLabel.font = [UIFont boldSystemFontOfSize:15];
+            btn.frame = CGRectMake(ScreenWidth - 70, 5, 50, 29);
+            [btn setTitle:@"修改" forState:UIControlStateNormal];
+            [btn addTarget:self action:@selector(updateInfoMethods) forControlEvents:UIControlEventTouchUpInside];
+            [investorsLabel addSubview:btn];
+            
+            
+        }
+        
+        
     [scrollView addSubview:investorsLabel];
+        
+        
+        
     
 //公司
         UIView *companyView = [[UIView alloc] initWithFrame:CGRectMake(0, 441, ScreenWidth, 44)];
@@ -355,8 +380,9 @@
         company.textAlignment = NSTextAlignmentRight;
         [companyView addSubview:company];
         
-        UILabel *fieldLabel = [[UILabel alloc] initWithFrame:CGRectMake(85, 0, 150, 44)];
+        UILabel *fieldLabel = [[UILabel alloc] initWithFrame:CGRectMake(85, 0, ScreenWidth - 95, 44)];
         fieldLabel.text = customer.companyName;
+        fieldLabel.numberOfLines = 0;
         fieldLabel.font = [UIFont systemFontOfSize:14];
         fieldLabel.textColor = [ColorUtil colorWithHexString:@"888888"];
         [companyView addSubview:fieldLabel];
@@ -431,6 +457,17 @@
     
     [self.view addSubview:scrollView];
 }
+
+-(void)updateInfoMethods {
+    UpDateInfoViewController *ctrl = [[UpDateInfoViewController alloc] init];
+
+    ctrl.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:ctrl animated:NO];
+
+
+}
+
+
 
 - (IBAction)callPhone:(UITouch *)sender
 {
